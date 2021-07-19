@@ -15,6 +15,8 @@ if [[ -z `psql -Atqc "\\list $PGDATABASE"` ]]; then
   echo "Database $PGDATABASE created."
 fi
 
+export FLASK_APP="manage.py"
+export FLASK_DEBUG=1
 
 echo db init
 flask db init
