@@ -12,8 +12,8 @@ def create_app(app_name='SENSORS', test_config=False, production_conf=False):
     # Register api blueprints
     app.register_blueprint(healthcheck_blueprint)
 
-    #from apis.models.model import db
-    #db.init_app(app)
+    from apis.models.model import db
+    db.init_app(app)
 
     return app
 
