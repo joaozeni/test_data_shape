@@ -19,7 +19,7 @@ def total_failure():
           200:
             description: a label total with the total in a int
     """
-    query = db.session.query(func.count(failure.id).label('total'))
+    query = db.session.query(func.count(failure.id).label('total')).filter(extract('year', failure.failure_date) == 2020).filter(extract('month', failure.failure_date) == 1)
     query_results = db.session.execute(query)
     total = query_results.all()[0][0]
     return {'total':total}, 200
@@ -34,7 +34,7 @@ def most_failure():
           200:
             description: return the code of the equipment in the key code, the total of failures in the key failures
     """
-    query = db.session.query(func.count(equipment.code).label('failures'), equipment.code).join(failure, equipment.id==failure.equipment_id).group_by(equipment.code).order_by(db.desc('failures'))
+    query = db.session.query(func.count(equipment.code).label('failures'), equipment.code).join(failure, equipment.id==failure.equipment_id).group_by(equipment.code).order_by(db.desc('failures')).filter(extract('year', failure.failure_date) == 2020).filter(extract('month', failure.failure_date) == 1)
     query_results = db.session.execute(query)
     most_failure = query_results.all()[0]
     code = most_failure[1]
@@ -54,7 +54,7 @@ def avg_failures_by_group():
     # This query is somehow complex, its based in a subquery, so the first part of the query returns the numeber of equipments in
     # a group, the joins this query with one counting the number of failures in a group
     query_equipment_count = db.session.query(equipment.group_name.label('e_id'), func.count('*').label('equipments_in_group')).group_by(equipment.group_name).subquery('equipment_count')
-    query = db.session.query(equipment.group_name, func.count().label('total_failure'), query_equipment_count.c.equipments_in_group).join(failure, equipment.id==failure.equipment_id).join(query_equipment_count, query_equipment_count.c.e_id==equipment.group_name).group_by(equipment.group_name, query_equipment_count.c.equipments_in_group).order_by('total_failure')
+    query = db.session.query(equipment.group_name, func.count().label('total_failure'), query_equipment_count.c.equipments_in_group).join(failure, equipment.id==failure.equipment_id).join(query_equipment_count, query_equipment_count.c.e_id==equipment.group_name).group_by(equipment.group_name, query_equipment_count.c.equipments_in_group).order_by('total_failure').filter(extract('year', failure.failure_date) == 2020).filter(extract('month', failure.failure_date) == 1)
     query_results = db.session.execute(query)
     result_list = []
     for row in query_results:

@@ -45,7 +45,7 @@ print('Inserting failures')
 failure_id = 1
 pat = r'(?<=\[)(.*?)(?=\])' # pattern to match the data between braclets
 pat_2 = r'[-+]?\d*\.\d+' # pattern to match the floats
-local_time = timezone('Etc/GMT-3')
+local_time = timezone('Etc/GMT')
 failure_file = open('equipment_failure_sensors.log')
 failures = failure_file.readlines()
 for failure in failures:
