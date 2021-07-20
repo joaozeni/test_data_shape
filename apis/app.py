@@ -1,7 +1,8 @@
 from flask import Flask, request
 
-#from apis.models.model import db
+from apis.models.model import db
 from apis.healthcheck import healthcheck_blueprint
+from apis.data_process import data_process_blueprint
 
 
 def create_app(app_name='SENSORS', test_config=False, production_conf=False):
@@ -11,8 +12,8 @@ def create_app(app_name='SENSORS', test_config=False, production_conf=False):
 
     # Register api blueprints
     app.register_blueprint(healthcheck_blueprint)
+    app.register_blueprint(data_process_blueprint, url_prefix='/data')
 
-    from apis.models.model import db
     db.init_app(app)
 
     return app
